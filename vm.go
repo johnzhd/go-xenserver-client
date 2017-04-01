@@ -572,6 +572,58 @@ func (self *VM) SetIsATemplate(is_a_template bool) (err error) {
 	return
 }
 
+func (self *VM) GetIsATemplate() (ret string, err error) {
+	result := APIResult{}
+	err = self.Client.APICall(&result, "VM.get_is_a_template", self.Ref)
+	if err != nil {
+		return
+	}
+	ret = "false"
+	if result.Value.(bool) {
+		ret = "true"
+	}
+	return
+}
+
+func (self *VM) GetIsSnapShot() (ret string, err error) {
+	result := APIResult{}
+	err = self.Client.APICall(&result, "VM.get_is_a_snapshot", self.Ref)
+	if err != nil {
+		return
+	}
+	ret = "false"
+	if result.Value.(bool) {
+		ret = "true"
+	}
+	return
+}
+
+func (self *VM) GetSnapShotOf() (ret string, err error) {
+	result := APIResult{}
+	err = self.Client.APICall(&result, "VM.get_snapshot_of", self.Ref)
+	if err != nil {
+		return
+	}
+	ret = result.Value.(string)
+	return
+}
+
+func (self *VM) GetConsoles() (ret []*Console, err error) {
+	result := APIResult{}
+	err = self.Client.APICall(&result, "VM.get_consoles", self.Ref)
+	if err != nil {
+		return
+	}
+	ret = make([]*Console, 0, 1)
+	for _, elem := range result.Value.([]interface{}) {
+		temp := new(Console)
+		temp.Ref = elem.(string)
+		temp.Client = self.Client
+		ret = append(ret, temp)
+	}
+	return
+}
+
 func (self *VM) GetOtherConfig() (other_config map[string]string, err error) {
 	result := APIResult{}
 	other_config = make(map[string]string)
