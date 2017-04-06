@@ -54,6 +54,12 @@ func (client *XenAPIClient) Login() (err error) {
 	return err
 }
 
+func (client *XenAPIClient) Logout() (err error) {
+	result := xmlrpc.Struct{}
+	err = client.RPCCall(&result, "session.logout", nil)
+	return
+}
+
 func (client *XenAPIClient) APICall(result *APIResult, method string, params ...interface{}) (err error) {
 	if client.Session == nil {
 		log.Errorf("no session\n")
